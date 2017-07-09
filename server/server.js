@@ -26,6 +26,17 @@ io.on('connection',(socket)=>{
     });
   });
 
+  socket.broadcast.emit('newMessage',{
+    from:'Admin',
+    text:'New user joined',
+    createdAt:new Date().getTime()
+  });
+
+  socket.emit('newMessage',{
+    from:'Admin',
+    text:'Welcom to the chat app'
+  });
+
 });
 
 
