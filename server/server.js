@@ -40,13 +40,24 @@ io.on('connection',(socket)=>{
 
 //CREATE MESSAGE
   socket.on('createMessage',function(message,callback){
-    io.emit('newMessage',generateMessage(message.from,message.text));
+
+    var list = users.getUser(socket.id);
+    var user = list[0];
+    console.log(user);
+    if(user && isRealString(message.text)){
+      io.to(user.room).emit('newMessage',generateMessage(user.name,message.text));
+    }
+
     callback();
   });
 
 //CREATE LOCATION MESSAGE
   socket.on('createLocationMessage',(coords)=>{
-     io.emit('newLocationMessage',generateLocationMessage('Admin',coords.latitude,coords.longitude));
+    var list = users.getUser(socket.id);
+    var user = list[0];
+      if(user){
+     io.to(user.room).emit('newLocationMessage',generateLocationMessage(user.name,coords.latitude,coords.longitude));
+   }
   });
 
 //DISCONNECT
